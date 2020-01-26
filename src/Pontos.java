@@ -3,7 +3,7 @@ public class Pontos {
 	
 	double x, y;
     boolean cheiro;
-
+    
     public Pontos(double x, double y) {
             this.x = x;
             this.y = y;

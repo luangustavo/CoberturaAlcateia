@@ -1,7 +1,9 @@
+import java.util.ArrayList;
 
 public class Antenas {
 
-	double x, y, raio, custo, variacao, qt_pontos;
+	double x, y, raio, custo, variacao;
+	ArrayList<Pontos> presas;
     
     public Antenas(double x, double y, double raio, double custo) {
         this.x = x;
@@ -9,14 +11,15 @@ public class Antenas {
         this.raio = raio;
         this.custo = custo;
         
-        this.variacao = 0;    
-        this.qt_pontos = 0;
+        this.variacao = 0;
+        
+        this.presas = new ArrayList<Pontos>();
         
     }
     public double Fitness() {
-        double fitness = -1;
+        double fitness = Integer.MAX_VALUE;
         if(this.custo*this.variacao != 0){
-            fitness = qt_pontos/(custo*variacao);
+            fitness = presas.size()/(custo*variacao);
 
         }
         return fitness;
