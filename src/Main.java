@@ -46,6 +46,37 @@ public class Main {
 		
 		for(int i=0; i<antenas.size(); i++) {
 			System.out.println("(" + antenas.get(i).x +", " + antenas.get(i).y + ") | R: " + antenas.get(i).raio);
+			
+			double distancia=0, df_x=0, df_y=0;
+			for(int j=0; j<pontos.size(); j++) {
+				
+				/*
+				* Calcular a distancia de cada ponto para as antenas
+				* D(P1, P2) = {(x1-x2)^2+SQRT(y1-y2)^2}^1/2
+				*
+				* Decodificando a chave:
+				* chave > 0.5 representa que a antena esta sendo utilizada
+				* chave <= 0.5 representa que a antena nao esta sendo utilizada
+				*/
+				
+				if(pontos.get(j).cheiro) {
+					
+					
+					df_x = antenas.get(i).x - pontos.get(j).x;
+					df_x = Math.pow(df_x, 2);
+					
+					df_y = antenas.get(i).y - pontos.get(j).y;
+					df_y = Math.pow(df_y, 2);
+					
+					distancia = df_x + df_y;
+					
+					distancia = Math.sqrt(distancia);
+					
+					if(distancia <= antenas.get(i).raio) {
+						pontos.get(j).cheiro = false;
+					}
+				}
+			}
 		}
 		
 		int indice_presa, presas_cacadas;
@@ -89,6 +120,7 @@ public class Main {
 						
 						if(distancia <= antenas.get(i).raio) {
 							pontos.get(j).cheiro = false;
+							antenas.get(i).presas.add(pontos.get(j));
 							presas_cacadas++;
 						}
 						else if(distancia < menor_distancia) {
@@ -149,11 +181,12 @@ public class Main {
 					}
 					if(pontos.get(i).candidatas.size() > 0){
 						antenas.get(pontos.get(i).candidatas.get(aux)).presas.add(pontos.get(i));
-						antenas.get(pontos.get(i).candidatas.get(aux)).variacao = aux_variacao;
+						
 						if(aux_variacao !=0 ) {
+							antenas.get(pontos.get(i).candidatas.get(aux)).variacao = aux_variacao;
 							antenas.get(pontos.get(i).candidatas.get(aux)).raio = antenas.get(pontos.get(i).candidatas.get(aux)).raio + aux_variacao;
 						}
-						custo_total = antenas.get(pontos.get(i).candidatas.get(aux)).variacao * antenas.get(pontos.get(i).candidatas.get(aux)).custo;
+						custo_total = custo_total + (antenas.get(pontos.get(i).candidatas.get(aux)).variacao * antenas.get(pontos.get(i).candidatas.get(aux)).custo);
 						
 						pontos.get(i).candidatas = null;
 						pontos.get(i).distancias_candidatas = null;
@@ -178,7 +211,9 @@ public class Main {
 		
 		System.out.println("====================================================");
 		for(int i=0; i<antenas.size(); i++) {
-			System.out.println("(" + antenas.get(i).x +", " + antenas.get(i).y + ") | R: " + antenas.get(i).raio  + " | Presas: "+ antenas.get(i).presas.size());
+			double teste = antenas.get(i).custo*antenas.get(i).variacao;
+			System.out.println("(" + antenas.get(i).x +", " + antenas.get(i).y + ") | R: " + antenas.get(i).raio  + " | Presas: "+ antenas.get(i).presas.size()
+					+ " | " + teste);
 		}
 		System.out.println("CUSTO TOTAL = " + custo_total);
 	}
