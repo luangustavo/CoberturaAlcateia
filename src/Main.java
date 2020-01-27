@@ -42,33 +42,18 @@ public class Main {
 			   antenas.add(antena);
 			   
 		}
-		Collections.sort (antenas, new Comparator() {
-			
-			public int compare(Object o1, Object o2) {
-				
-				Antenas a1 = (Antenas) o1;
-				Antenas a2 = (Antenas) o2;
-				return a1.x > a2.x ? -1 : (a1.x > a2.x ? +1 : 0);
-			}
-				
-			});
 		
-		System.out.println(antenas.get(0).x);
+		
+		for(int i=0; i<antenas.size(); i++) {
+			System.out.println("(" + antenas.get(i).x +", " + antenas.get(i).y + ") | R: " + antenas.get(i).raio);
+		}
 		
 		int indice_presa, presas_cacadas;
+		double custo_total=0;
+		
 		while(true) {
-			presas_cacadas = 0;
 			
-			Collections.sort (antenas, new Comparator() {
-				
-				public int compare(Object o1, Object o2) {
-					
-					Antenas a1 = (Antenas) o1;
-					Antenas a2 = (Antenas) o2;
-					return a1.Fitness() > a2.Fitness() ? -1 : (a1.Fitness() > a2.Fitness() ? +1 : 0);
-				}
-					
-				});
+			presas_cacadas = 0;
 			
 			for(int i=0; i<antenas.size(); i++) {
 				
@@ -112,41 +97,85 @@ public class Main {
 					}
 				}
 				
+				
 				if(presas_cacadas != pontos.size()) {
-					/*Caca*/
-					if(antenas.get(i).raio < menor_distancia) {
-						antenas.get(i).variacao = menor_distancia - antenas.get(i).raio;
-						antenas.get(i).raio = menor_distancia;
-					}
-					pontos.get(indice_presa).cheiro = false;
-					antenas.get(i).presas.add(pontos.get(indice_presa));
+					
+					pontos.get(indice_presa).candidatas.add(i);
+					pontos.get(indice_presa).distancias_candidatas.add(menor_distancia);
+					
 				}
 				
 			}
 			if(presas_cacadas == pontos.size()) {
 				break;
 			}
-		}
-		
-		Collections.sort (antenas, new Comparator() {
 			
-			public int compare(Object o1, Object o2) {
-				
-				Antenas a1 = (Antenas) o1;
-				Antenas a2 = (Antenas) o2;
-				return a1.x > a2.x ? -1 : (a1.x > a2.x ? +1 : 0);
+			/*Caca*/
+			
+			for(int i=0; i<pontos.size(); i++) {
+				double fitness, aux_raio=0, aux_variacao=0 ,melhor_fitness=0;
+				int aux=0;
+				if(pontos.get(i).candidatas != null) {
+					for(int j=0; j<pontos.get(i).candidatas.size(); j++) {
+					
+						double nova_variacao = 0;
+						
+						if( antenas.get(pontos.get(i).candidatas.get(j)).raio < pontos.get(i).distancias_candidatas.get(j)) {
+							nova_variacao = pontos.get(i).distancias_candidatas.get(j) - antenas.get(pontos.get(i).candidatas.get(j)).raio;
+						}
+						
+						double variacao_total = antenas.get(pontos.get(i).candidatas.get(j)).variacao + nova_variacao;
+						
+				        if(antenas.get(pontos.get(i).candidatas.get(j)).custo*variacao_total != 0){
+				            fitness = ( antenas.get(pontos.get(i).candidatas.get(j)).presas.size()+1) / ( antenas.get(pontos.get(i).candidatas.get(j)).custo*variacao_total);
+				            
+				        }
+				        else {
+				        	variacao_total = 0;
+				        	fitness = Integer.MAX_VALUE;
+				        }
+				        
+						if(fitness > melhor_fitness) {
+							melhor_fitness = fitness;
+							aux = j;
+							aux_variacao = variacao_total;
+						}
+						
+					}
+					if(pontos.get(i).candidatas.size() > 0){
+						antenas.get(pontos.get(i).candidatas.get(aux)).presas.add(pontos.get(i));
+						antenas.get(pontos.get(i).candidatas.get(aux)).variacao = aux_variacao;
+						antenas.get(pontos.get(i).candidatas.get(aux)).raio = aux_variacao;
+						
+						custo_total = antenas.get(pontos.get(i).candidatas.get(aux)).variacao * antenas.get(pontos.get(i).candidatas.get(aux)).custo;
+						
+						pontos.get(i).candidatas = null;
+						pontos.get(i).distancias_candidatas = null;
+						pontos.get(i).cheiro = false;
+						
+					}
+				}
 			}
-				
-			});
-		
-		for(int i=0; i<antenas.size(); i++) {
-			System.out.println(antenas.get(i).presas.size());
+			/*
+			if(antenas.get(i).raio < menor_distancia) {
+				antenas.get(i).variacao = menor_distancia - antenas.get(i).raio;
+				custo_total = antenas.get(i).variacao * antenas.get(i).custo;
+				antenas.get(i).raio = menor_distancia;
+			}
+			
+			pontos.get(indice_presa).cheiro = false;
+			antenas.get(i).presas.add(pontos.get(indice_presa));
+			*/
 		}
 		
+	
 		
-		
-		System.out.println(antenas.get(0).x);
-
+		System.out.println("====================================================");
+		for(int i=0; i<antenas.size(); i++) {
+			System.out.println("(" + antenas.get(i).x +", " + antenas.get(i).y + ") | R: " + antenas.get(i).raio  + " | Presas: "+ antenas.get(i).presas.size());
+			
+		}
+		System.out.println("CUSTO TOTAL = " + custo_total);
 	}
 
 }
