@@ -20,8 +20,7 @@ public class Antenas {
         double fitness = Integer.MAX_VALUE;
         
         if(this.custo*nova_variacao != 0 || this.total!=0){
-            fitness = (this.presas.size()+1) / ((this.custo*nova_variacao) + this.total);
-
+            fitness = this.presas.size() / (this.custo*variacao);
         }
         
         return fitness;
