@@ -53,36 +53,13 @@ public class Plotar extends JFrame {
 					g2.setPaint(Color.BLACK);
 					g2.draw(rect2);
 				}
-				/*
-				Point2D.Double point = new Point2D.Double(100, 100);
-				Shape line = new Line2D.Double(3, 3, 303, 303);
-				Shape rect = new Rectangle(3, 3, 303, 303);
-				Shape circle = new Ellipse2D.Double(100, 100, 100, 100);
-				Shape roundRect = new RoundRectangle2D.Double(20, 20, 250, 250, 5, 25);
-				Rectangle2D.Double rect2 = new Rectangle2D.Double(point.x - 0.5, point.y - 0.5, 1, 1);
 				
-				g2.setPaint(Color.RED);
-				g2.draw(rect2);
-				g2.setPaint(Color.BLUE);
-				g2.draw(circle);
-				*/
 				
 			}
 		};
-		setTitle("My Shapes");
+		setTitle("Wolf Pack");
 		this.getContentPane().add(p);
 	}
 
-	/*public static void main(String arg[]) {
-
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				new Plotar();
-			}
-		});
-	}*/
-
+	
 }
