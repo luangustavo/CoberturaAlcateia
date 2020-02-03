@@ -17,7 +17,7 @@ public class Alcateia {
 				
 				Antenas p1 = (Antenas) o1;
 				Antenas p2 = (Antenas) o2;
-				return p1.fitness < p2.fitness ? -1 : (p1.fitness > p2.fitness ? +1 : 0);
+				return p1.fitness > p2.fitness ? -1 : (p1.fitness > p2.fitness ? +1 : 0);
 			}
 				
 			});
